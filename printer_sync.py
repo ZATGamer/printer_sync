@@ -6,8 +6,10 @@ import subprocess
 def needs_update():
     # Check drive vs local to see if there are any differences that need synced.
     # We will always exclude ".metadata.json" as this is really printer specific.
-    print subprocess.check_call(['rclone', 'check', 'drive:/', '/home/pi/test/'])
-    return True
+    test = subprocess.check_call(['rclone', 'check', 'drive:/', '/home/pi/test/'])
+    print(test)
+    return test
+
 
 
 def safe_to_sync():
