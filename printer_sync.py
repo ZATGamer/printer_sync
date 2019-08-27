@@ -40,7 +40,7 @@ def sync():
 
 if __name__ == '__main__':
     g_drive = 'drive:/'
-    local_drive = '/home/pi/test/'
+    local_drive = '/home/pi/.octoprint/uploads/'
     exclude1 = '*.json'
     exclude2 = 'oneoff/'
     http_proxy = "http://127.0.0.1:3128"
