@@ -35,7 +35,7 @@ def safe_to_sync():
 
 def sync():
     print("Sync Happening")
-    os.system('rclone {}:/ {}'.format(g_drive, local_drive))
+    os.system('rclone sync {}:/ {}'.format(g_drive, local_drive))
 
 
 if __name__ == '__main__':
