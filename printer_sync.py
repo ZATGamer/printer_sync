@@ -36,7 +36,6 @@ def sync():
 if __name__ == '__main__':
     http_proxy = "http://127.0.0.1:3128"
     g_proxys = {
-        "http": http_proxy
     }
     if safe_to_sync():
         if needs_update():
