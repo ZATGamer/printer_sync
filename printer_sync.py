@@ -1,7 +1,9 @@
+#!/usr/bin/python
 import requests
 import json
 import subprocess
 import os
+
 
 def needs_update():
     # Check drive vs local to see if there are any differences that need synced.
