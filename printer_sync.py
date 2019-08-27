@@ -14,10 +14,10 @@ def needs_update():
 
 def safe_to_sync():
     # Make sure the printer isn't running.
-    r_data = requests.get('http://192.168.1.202/api/printer', proxies=g_proxys)
+    r_data = requests.get('http://localhost/api/printer', proxies=g_proxys)
     if r_data.status_code == 409:
         # 403 means octoprint is not even connected to the printer. Safe to update files
-        print("got 403")
+        print("got 409")
         return True
     if r_data.status_code == 200:
         print("got 200")
