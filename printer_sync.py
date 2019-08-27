@@ -7,7 +7,7 @@ def needs_update():
     # Check drive vs local to see if there are any differences that need synced.
     # We will always exclude ".metadata.json" as this is really printer specific.
     try:
-        subprocess.check_call(['rclone', 'check', '{}:/'.format(g_drive), '{}'.format(local_drive)])
+        subprocess.check_call(['rclone', 'check', g_drive, local_drive, '--exclude', exclude1, '--exclude', exclude2])
         update_needed = False
     except subprocess.CalledProcessError:
         update_needed = True
@@ -35,12 +35,14 @@ def safe_to_sync():
 
 def sync():
     print("Sync Happening")
-    os.system('rclone sync {}:/ {}'.format(g_drive, local_drive))
+    os.system('rclone sync {} {} --exclude {} --exclude {}'.format(g_drive, local_drive, exclude1, exclude2))
 
 
 if __name__ == '__main__':
-    g_drive = 'drive'
+    g_drive = 'drive:/'
     local_drive = '/home/pi/test/'
+    exclude1 = '*.json'
+    exclude2 = 'oneoff/'
     http_proxy = "http://127.0.0.1:3128"
     g_proxys = {
     }
