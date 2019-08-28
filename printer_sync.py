@@ -35,7 +35,8 @@ def safe_to_sync():
             print('Printer is in an "Operational" state.')
             return True
         else:
-            print('Printer is NOT in an "Operational" state.')
+            print('Printer is NOT in an "Operational" state.\n'
+                  'This means that printer should be printing.')
             return False
 
 
