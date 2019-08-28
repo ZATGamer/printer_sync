@@ -9,11 +9,13 @@ def needs_update():
     # Check drive vs local to see if there are any differences that need synced.
     # We will always exclude ".metadata.json" as this is really printer specific.
     try:
+        print("Checking to see if files are in sync.")
         subprocess.check_call(['rclone', 'check', g_drive, local_drive, '--exclude', exclude1, '--exclude', exclude2])
         update_needed = False
+        print("Files ARE in sync.")
     except subprocess.CalledProcessError:
         update_needed = True
-    print(update_needed)
+        print("Files are NOT in sync.")
     return update_needed
 
 
