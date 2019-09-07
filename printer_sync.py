@@ -42,7 +42,7 @@ def safe_to_sync():
 
 def sync():
     print("Sync Happening")
-    os.system('rclone sync {} {} --exclude {} --exclude {}'.format(g_drive, local_drive, exclude1, exclude2))
+    os.system('rclone sync {} {} --exclude {} --exclude {} --exclude {}'.format(g_drive, local_drive, exclude1, exclude2, exclude3))
     print("Sync Complete")
 
 
@@ -51,6 +51,7 @@ if __name__ == '__main__':
     local_drive = '/home/pi/.octoprint/uploads/'
     exclude1 = '*.json'
     exclude2 = 'oneoff/'
+    exclude3 = '*.ini'
     http_proxy = "http://127.0.0.1:3128"
     g_proxys = {
     }
