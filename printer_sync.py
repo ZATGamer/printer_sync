@@ -103,7 +103,6 @@ if __name__ == '__main__':
     exclude3 = '*.ini'
     http_proxy = "http://127.0.0.1:3128"
     g_proxys = {
-        "http": http_proxy
     }
     main()
     # if safe_to_sync():
