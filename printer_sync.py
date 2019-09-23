@@ -5,20 +5,6 @@ import subprocess
 import os
 
 
-def needs_update():
-    # Check drive vs local to see if there are any differences that need synced.
-    # We will always exclude ".metadata.json" as this is really printer specific.
-    try:
-        print("Checking to see if files are in sync.")
-        subprocess.check_call(['rclone', 'check', g_drive, local_stage, '--exclude', exclude1, '--exclude', exclude2])
-        update_needed = False
-        print("Files ARE in sync.")
-    except subprocess.CalledProcessError:
-        update_needed = True
-        print("Files are NOT in sync.")
-    return update_needed
-
-
 def stage_needs_update():
     # Check drive vs local to see if there are any differences that need synced.
     # We will always exclude ".metadata.json" as this is really printer specific.
@@ -105,8 +91,3 @@ if __name__ == '__main__':
     g_proxys = {
     }
     main()
-    # if safe_to_sync():
-    #     print("Safe to Sync = True")
-    #     if needs_update():
-    #         print("Files are out of sync.")
-    #         sync()
