@@ -10,7 +10,21 @@ def needs_update():
     # We will always exclude ".metadata.json" as this is really printer specific.
     try:
         print("Checking to see if files are in sync.")
-        subprocess.check_call(['rclone', 'check', g_drive, local_drive, '--exclude', exclude1, '--exclude', exclude2])
+        subprocess.check_call(['rclone', 'check', g_drive, local_stage, '--exclude', exclude1, '--exclude', exclude2])
+        update_needed = False
+        print("Files ARE in sync.")
+    except subprocess.CalledProcessError:
+        update_needed = True
+        print("Files are NOT in sync.")
+    return update_needed
+
+
+def stage_needs_update():
+    # Check drive vs local to see if there are any differences that need synced.
+    # We will always exclude ".metadata.json" as this is really printer specific.
+    try:
+        print("Checking to see if files are in sync.")
+        subprocess.check_call(['rclone', 'check', g_drive, local_stage])
         update_needed = False
         print("Files ARE in sync.")
     except subprocess.CalledProcessError:
@@ -40,23 +54,60 @@ def safe_to_sync():
             return False
 
 
-def sync():
-    print("Sync Happening")
-    os.system('rclone sync {} {} --exclude {} --exclude {} --exclude {}'.format(g_drive, local_drive, exclude1, exclude2, exclude3))
+def sync_cloud_to_stage():
+    print("Sync from cloud to stage Happening")
+    os.system('rclone sync {} {}'.format(g_drive, local_stage))
     print("Sync Complete")
+
+
+def sync_stage_to_production():
+    print("Sync From stage to production Happening")
+    os.system(
+        'rclone sync {} {} --exclude {} --exclude {} --exclude {}'.format(local_stage, local_production, exclude1, exclude2, exclude3))
+    print("Sync Complete")
+
+
+def pre_check():
+    if not os.path.exists(local_stage):
+        os.mkdir(local_stage)
+
+
+def main():
+    pre_check()
+    # Compare staging to Google
+    if stage_needs_update():
+        # Sync Google to stage if needed
+        sync_cloud_to_stage()
+        # Set a sync needed flag to true
+        with open(sync_flag, 'a'):
+            os.utime(sync_flag, None)
+
+    # Check sync needed flag
+    if os.path.exists(sync_flag):
+        # Check if printer is printing
+        if safe_to_sync():
+            # rclone sync staging to production
+            sync_stage_to_production()
+            # Clear sync needed flag
+            os.remove(sync_flag)
 
 
 if __name__ == '__main__':
     g_drive = 'drive:/'
-    local_drive = '/home/pi/.octoprint/uploads/'
+    stage = 'stage:/'
+    local_stage = '/tmp/stage/'
+    local_production = '/home/pi/.octoprint/uploads/'
+    sync_flag = '/tmp/sync_needed'
     exclude1 = '*.json'
     exclude2 = 'oneoff/'
     exclude3 = '*.ini'
     http_proxy = "http://127.0.0.1:3128"
     g_proxys = {
+        "http": http_proxy
     }
-    if safe_to_sync():
-        print("Safe to Sync = True")
-        if needs_update():
-            print("Files are out of sync.")
-            sync()
+    main()
+    # if safe_to_sync():
+    #     print("Safe to Sync = True")
+    #     if needs_update():
+    #         print("Files are out of sync.")
+    #         sync()
