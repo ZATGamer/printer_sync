@@ -63,6 +63,7 @@ def pre_check():
     # Make sure This is the only instance of the script running.
     if not os.path.exists('/tmp/printer_sync.lock'):
         # Create lock file:
+        print("Creating Lock File.")
         with open('/tmp/printer_sync.lock', 'w') as lock:
             lock.write('{}'.format(datetime.datetime.now()))
     else:
@@ -76,6 +77,7 @@ def pre_check():
 
 def post_check():
     # Remove Lock file
+    print("Removing Lock File")
     os.remove('/tmp/printer_sync.lock')
 
 
