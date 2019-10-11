@@ -3,6 +3,7 @@ import requests
 import json
 import subprocess
 import os
+import datetime
 
 
 def stage_needs_update():
@@ -53,9 +54,29 @@ def sync_stage_to_production():
     print("Sync Complete")
 
 
+def check_production_to_stage():
+    pass
+    #os.walk()
+
+
 def pre_check():
+    # Make sure This is the only instance of the script running.
+    if not os.path.exists('/tmp/printer_sync.lock'):
+        # Create lock file:
+        with open('/tmp/printer_sync.lock', 'w') as lock:
+            lock.write('{}'.format(datetime.datetime.now()))
+    else:
+        print('Lock File exists.... Exiting...')
+        exit(1)
+
+    # Make sure stage folder exists
     if not os.path.exists(local_stage):
         os.mkdir(local_stage)
+
+
+def post_check():
+    # Remove Lock file
+    os.remove('/tmp/printer_sync.lock')
 
 
 def main():
@@ -76,6 +97,8 @@ def main():
             sync_stage_to_production()
             # Clear sync needed flag
             os.remove(sync_flag)
+
+    post_check()
 
 
 if __name__ == '__main__':
