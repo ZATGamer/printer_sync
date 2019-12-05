@@ -60,6 +60,9 @@ def check_production_to_stage():
 
 
 def pre_check():
+    if not safe_to_sync():
+        print('Printer is Printing.')
+        exit(1)
     # Make sure This is the only instance of the script running.
     if not os.path.exists('/tmp/printer_sync.lock'):
         # Create lock file:
