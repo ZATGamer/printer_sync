@@ -4,6 +4,7 @@ import json
 import subprocess
 import os
 import datetime
+import configparser
 
 
 def stage_needs_update():
@@ -22,7 +23,7 @@ def stage_needs_update():
 
 def safe_to_sync():
     # Make sure the printer isn't running.
-    headers = {"X-Api-Key": api_key}
+    headers = {"X-Api-Key": config["api"]["key"]}
     r_data = requests.get('http://localhost/api/printer', proxies=g_proxys, headers=headers)
     if r_data.status_code == 409:
         # 403 means octoprint is not even connected to the printer. Safe to update files
@@ -120,6 +121,8 @@ if __name__ == '__main__':
     g_proxys = {
     }
     #main()
+    config = configparser.ConfigParser()
+    config.read('config.ini')
     good_to_go = safe_to_sync()
     if good_to_go:
         exit(0)
