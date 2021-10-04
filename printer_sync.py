@@ -140,9 +140,12 @@ if __name__ == '__main__':
     config = configparser.ConfigParser()
     config.read('config.ini')
     if checkIfProcessRunning('rclone'):
+        print("Exit because process exists")
         exit(1)
     good_to_go = safe_to_sync()
     if good_to_go:
+        print("Good to sync")
         exit(0)
     else:
+        print("Not Good.")
         exit(1)
