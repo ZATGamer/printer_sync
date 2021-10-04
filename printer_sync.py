@@ -21,10 +21,9 @@ def stage_needs_update():
 
 
 def safe_to_sync():
-    # TEMP FIX
-    return True
     # Make sure the printer isn't running.
-    r_data = requests.get('http://localhost/api/printer', proxies=g_proxys)
+    headers = {"X-Api-Key": api_key}
+    r_data = requests.get('http://localhost/api/printer', proxies=g_proxys, headers=headers)
     if r_data.status_code == 409:
         # 403 means octoprint is not even connected to the printer. Safe to update files
         print("Printer is Offline (http 409).")
@@ -120,4 +119,9 @@ if __name__ == '__main__':
     http_proxy = "http://127.0.0.1:3128"
     g_proxys = {
     }
-    main()
+    #main()
+    good_to_go = safe_to_sync()
+    if good_to_go:
+        exit(0)
+    else:
+        exit(1)
