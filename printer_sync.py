@@ -5,6 +5,22 @@ import subprocess
 import os
 import datetime
 import configparser
+import psutil
+
+
+def checkIfProcessRunning(processName):
+    '''
+    Check if there is any running process that contains the given name processName.
+    '''
+    #Iterate over the all the running process
+    for proc in psutil.process_iter():
+        try:
+            # Check if process name contains the given name string.
+            if processName.lower() in proc.name().lower():
+                return True
+        except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+            pass
+    return False
 
 
 def stage_needs_update():
@@ -123,6 +139,8 @@ if __name__ == '__main__':
     #main()
     config = configparser.ConfigParser()
     config.read('config.ini')
+    if checkIfProcessRunning('rclone'):
+        exit(1)
     good_to_go = safe_to_sync()
     if good_to_go:
         exit(0)
